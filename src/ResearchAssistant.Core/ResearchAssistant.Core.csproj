@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.40.1" />
+    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.40.1-alpha" />
   </ItemGroup>
 
 </Project>
