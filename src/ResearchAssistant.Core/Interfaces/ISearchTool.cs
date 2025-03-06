@@ -5,12 +5,11 @@ using ResearchAssistant.Core.Models;
 
 namespace ResearchAssistant.Core.Interfaces;
 
-public interface ISectionWriter
+public interface ISearchTool
 {
-    Task<Section> WriteSectionAsync(
-        Section section,
-        ReportState reportState,
-        List<SearchResult> searchResults,
+    Task<List<SearchResult>> SearchAsync(
+        string query,
+        SearchOptions options,
         CancellationToken cancellationToken = default
     );
 }
