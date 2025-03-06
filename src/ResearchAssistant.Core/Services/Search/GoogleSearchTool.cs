@@ -150,12 +150,110 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
             Skip = 0,
         };
 
+        // Initialize filter as needed
+        TextSearchFilter? filter = null;
+
+        // --- Site filtering ---
+
         // Apply site filtering based on options
         if (!string.IsNullOrWhiteSpace(options.SiteFilter))
         {
-            // For Google - Use siteSearch parameter (Based on documentation)
             textSearchOptions.SiteSearch = options.SiteFilter;
+
+            // Apply site search filter mode if specified
+            if (
+                !string.IsNullOrWhiteSpace(options.SiteFilterMode)
+                && (options.SiteFilterMode == "i" || options.SiteFilterMode == "e")
+            )
+            {
+                filter = (filter ?? new TextSearchFilter()).Equality(
+                    "siteSearchFilter",
+                    options.SiteFilterMode
+                );
+            }
         }
+
+        // Link relationships
+        if (!string.IsNullOrWhiteSpace(options.LinkSite))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("linkSite", options.LinkSite);
+        }
+
+        // --- Content filtering ---
+
+        // Date restrictions
+        if (!string.IsNullOrWhiteSpace(options.DateRestrict))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality(
+                "dateRestrict",
+                options.DateRestrict
+            );
+        }
+
+        // Term filtering
+        if (!string.IsNullOrWhiteSpace(options.ExactTerms))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("exactTerms", options.ExactTerms);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.ExcludeTerms))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality(
+                "excludeTerms",
+                options.ExcludeTerms
+            );
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.OrTerms))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("orTerms", options.OrTerms);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.FileType))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("fileType", options.FileType);
+        }
+
+        // --- Language and region ---
+
+        if (!string.IsNullOrWhiteSpace(options.Language))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("lr", options.Language);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.Country))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("cr", options.Country);
+        }
+
+        // --- Rights and safety ---
+
+        if (!string.IsNullOrWhiteSpace(options.Rights))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("rights", options.Rights);
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.SafeSearch))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality("safe", options.SafeSearch);
+        }
+
+        // --- Duplicate filtering ---
+
+        if (!string.IsNullOrWhiteSpace(options.DuplicateContentFilter))
+        {
+            filter = (filter ?? new TextSearchFilter()).Equality(
+                "filter",
+                options.DuplicateContentFilter
+            );
+        }
+
+        // Apply the constructed filter if any conditions were set
+        if (filter != null)
+        {
+            textSearchOptions.Filter = filter;
+        }
+        // Handle URL exclusion if no other filters are set but URLs should be excluded
         else if (!options.IncludeUrls)
         {
             // Create empty filter if URLs shouldn't be included
