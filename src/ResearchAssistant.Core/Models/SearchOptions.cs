@@ -6,4 +6,5 @@ public class SearchOptions
     public bool IncludeUrls { get; set; } = true; // Whether to include URLs in results
     public bool IncludeSnippets { get; set; } = true; // Whether to include snippets
     public bool IncludeContent { get; set; } = false; // Whether to include full content
+    public string SiteFilter { get; set; } = string.Empty; // Site domain to restrict search to
 }
