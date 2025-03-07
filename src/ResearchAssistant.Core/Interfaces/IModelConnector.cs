@@ -1,9 +1,14 @@
+using System.Threading;
 using System.Threading.Tasks;
-using Systen.Threading;
+using ResearchAssistant.Core.Models;
 
 namespace ResearchAssistant.Core.Interfaces;
 
 public interface IModelConnector
 {
-    Task<string> GenerateAsync(string prompt, CancellationToken cancellationToken = default);
+    Task<LlmResponse> SendPromptAsync(
+        string prompt,
+        PromptOptions? promptOptions = null,
+        CancellationToken cancellationToken = default
+    );
 }

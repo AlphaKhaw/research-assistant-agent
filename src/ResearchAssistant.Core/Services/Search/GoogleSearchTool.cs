@@ -1,3 +1,5 @@
+#pragma warning disable SKEXP0001, SKEXP0050
+
 using System; // Basic C# infrastructure (exceptions, math functions)
 using System.Collections.Generic; // For List<SearchResult> and other collection types
 using System.Text.Json; // For JSON serialization/deserialization options
@@ -15,13 +17,16 @@ namespace ResearchAssistant.Core.Services.Search;
 public class GoogleSearchToolWithFunctionCalling : ISearchTool
 {
     // Core Google search service from Semantic Kernel
-    private readonly GoogleTextSearch _googlesearch;
+    private readonly GoogleTextSearch _googleSearch;
 
     // Semantic Kernel instance for LLM operations
     private readonly Kernel _kernel;
 
     // JSON serialization settings with camelCase property names
     private readonly JsonSerializerOptions _jsonOptions;
+
+    // Logger
+    private readonly ILogger<GoogleSearchToolWithFunctionCalling> _logger;
 
     // Plugin name constant to avoid string literals
     private const string SEARCH_PLUGIN_NAME = "SearchPlugin";
@@ -90,7 +95,7 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
 
             // Execute the search
             return await ExecuteSearchAsync(
-                optimizedTerms,
+                optimisedTerms,
                 textSearchOptions,
                 options,
                 cancellationToken
@@ -131,7 +136,7 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
         );
 
         // Clean up the search terms (remove quotes, trim whitespace, etc.)
-        var cleanedTerms = searchTerms.Trim('"', ' ', '\n');
+        var cleanedTerms = searchTerms.ToString().Trim(' ', '\n').Replace("\"", "");
 
         _logger.LogInformation("Optimized search terms: {SearchTerms}", cleanedTerms);
 
@@ -144,12 +149,6 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
     // Private Method: Create TextSearchOptions from SearchOptions
     private TextSearchOptions CreateSearchOptions(SearchOptions options)
     {
-        var textSearchOptions = new TextSearchOptions
-        {
-            Top = Math.Max(1, options.MaxResults), // Ensure at least 1 result
-            Skip = 0,
-        };
-
         // Initialize filter as needed
         TextSearchFilter? filter = null;
 
@@ -158,7 +157,7 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
         // Apply site filtering based on options
         if (!string.IsNullOrWhiteSpace(options.SiteFilter))
         {
-            textSearchOptions.SiteSearch = options.SiteFilter;
+            filter = (filter ?? new TextSearchFilter()).Equality("site", options.SiteFilter);
 
             // Apply site search filter mode if specified
             if (
@@ -248,17 +247,14 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
             );
         }
 
-        // Apply the constructed filter if any conditions were set
-        if (filter != null)
+        // Initialize TextSearchOptions with the filter
+        // Since Filter is init-only, we need to set it during initialization
+        var textSearchOptions = new TextSearchOptions
         {
-            textSearchOptions.Filter = filter;
-        }
-        // Handle URL exclusion if no other filters are set but URLs should be excluded
-        else if (!options.IncludeUrls)
-        {
-            // Create empty filter if URLs shouldn't be included
-            textSearchOptions.Filter = new TextSearchFilter();
-        }
+            Top = Math.Max(1, options.MaxResults), // Ensure at least 1 result
+            Skip = 0,
+            Filter = filter ?? (!options.IncludeUrls ? new TextSearchFilter() : null),
+        };
 
         return textSearchOptions;
     }
@@ -272,7 +268,7 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
     )
     {
         // Get results from Google Search
-        var kernelResults = await _googlesearch.GetTextSearchResultsAsync(
+        var kernelResults = await _googleSearch.GetTextSearchResultsAsync(
             searchTerms,
             textSearchOptions,
             cancellationToken
@@ -299,3 +295,5 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
         return searchResults;
     }
 }
+
+#pragma warning restore SKEXP0001, SKEXP0050
