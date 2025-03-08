@@ -8,6 +8,7 @@ using System.Threading.Tasks; // For async Task support
 using Microsoft.Extensions.Logging; // For structured logging (ILogger)
 using Microsoft.SemanticKernel; // Core Semantic Kernel (Kernel, KernelArguments, etc.)
 using Microsoft.SemanticKernel.Data; // For search-related data structures (TextSearchOptions, TextSearchFilter)
+using Microsoft.SemanticKernel.Functions; // For KernelFunction attribute
 using Microsoft.SemanticKernel.Plugins.Web.Google; // Google Search plugin (GoogleTextSearch class)
 using ResearchAssistant.Core.Interfaces; // For ISearchTool interface
 using ResearchAssistant.Core.Models; // For SearchResult and SearchOptions models
@@ -63,6 +64,7 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
     }
 
     // Public Method: Implementation of SearchAsync method from ISearchTool interface
+    [KernelFunction]
     public async Task<List<SearchResult>> SearchAsync(
         string query,
         SearchOptions options,
@@ -83,8 +85,17 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
             if (_searchPlugin == null)
             {
                 _searchPlugin = _googleSearch.CreateWithGetTextSearchResults(SEARCH_PLUGIN_NAME);
-                _kernel.Plugins.Add(_searchPlugin);
-                _logger.LogDebug("Search plugin created and added to kernel");
+                // _kernel.Plugins.Add(_searchPlugin);
+                // _logger.LogDebug("Search plugin created and added to kernel");
+                if (!_kernel.Plugins.Contains(SEARCH_PLUGIN_NAME))
+                {
+                    _kernel.Plugins.Add(_searchPlugin);
+                    _logger.LogDebug("Search plugin created and added to kernel");
+                }
+                else
+                {
+                    _logger.LogDebug("Search plugin already exists in kernel");
+                }
             }
 
             // Generate optimiszed search terms using LLM

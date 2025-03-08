@@ -96,7 +96,7 @@ public class OpenAIConnector : IModelConnector
 
             // Process function calling metadata if available
             var functionMetadata = new List<FunctionCallInfo>();
-            if (result.Metadata.ContainsKey("FunctionCalls"))
+            if (result?.Metadata != null && result.Metadata.ContainsKey("FunctionCalls"))
             {
                 var functionCalls = result.Metadata["FunctionCalls"];
                 _logger.LogInformation(
@@ -128,7 +128,8 @@ public class OpenAIConnector : IModelConnector
         try
         {
             if (
-                result.Metadata.TryGetValue("Usage", out var usageObj)
+                result?.Metadata != null
+                && result.Metadata.TryGetValue("Usage", out var usageObj)
                 && usageObj is JsonElement usageElement
             )
             {
