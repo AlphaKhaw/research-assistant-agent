@@ -436,5 +436,10 @@ class Program
         Console.WriteLine(
             "  Revise plan:   make test-planner ARGS=\"--topic 'Climate Change' --feedback 'Add more about mitigation strategies'\""
         );
+        Console.WriteLine("\nNote for multi-word topics:");
+        Console.WriteLine(
+            "  Use quotes in the command: make test-planner ARGS='--topic \"Flash Attention\"'"
+        );
+        Console.WriteLine("  Or let the program prompt you interactively for the topic");
     }
 }
