@@ -7,10 +7,8 @@ namespace ResearchAssistant.Core.Interfaces;
 
 public interface ISectionWriter
 {
-    Task<Section> WriteSectionAsync(
-        Section section,
-        ReportState reportState,
-        List<SearchResult> searchResults,
+    Task<Report> WriteReportAsync(
+        ExecutionPlan plan,
         CancellationToken cancellationToken = default
     );
 }

@@ -19,6 +19,7 @@ public class ReportSection
     public string Description { get; set; } = string.Empty;
     public bool RequiresResearch { get; set; }
     public string Content { get; set; } = string.Empty;
+    public ExecutionPhase ExecutionPhase { get; set; }
 }
 
 public class PlanRevision

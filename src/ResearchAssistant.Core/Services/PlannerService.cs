@@ -146,6 +146,10 @@ public class PlannerService : IPlanner
                 options,
                 cancellationToken
             );
+            _logger.LogInformation(
+                "Raw LLM response for plan generation:\n{Response}",
+                response.Content
+            );
 
             // Log the raw LLM response
             _logger.LogDebug("Raw LLM response for plan generation:\n{Response}", response.Content);
@@ -161,7 +165,7 @@ public class PlannerService : IPlanner
 
             foreach (var section in plan.Sections ?? new List<ReportSection>())
             {
-                _logger.LogDebug(
+                _logger.LogInformation(
                     "Plan section {Number}: {Name} (Research: {RequiresResearch})",
                     section.Number,
                     section.Name,
@@ -256,7 +260,7 @@ public class PlannerService : IPlanner
 
             foreach (var section in revisedPlan.Sections ?? new List<ReportSection>())
             {
-                _logger.LogDebug(
+                _logger.LogInformation(
                     "Revised section {Number}: {Name} (Research: {RequiresResearch})",
                     section.Number,
                     section.Name,
@@ -304,6 +308,31 @@ public class PlannerService : IPlanner
         {
             foreach (var section in approvedPlan.Sections)
             {
+                // Identify section type
+                bool isIntroduction =
+                    section.Name.Contains("introduction", StringComparison.OrdinalIgnoreCase)
+                    || section.Number == 1;
+                bool isConclusion =
+                    section.Name.Contains("conclusion", StringComparison.OrdinalIgnoreCase)
+                    || section.Number == approvedPlan.Sections.Count;
+
+                // Set phase and research requirements
+                if (isIntroduction)
+                {
+                    section.ExecutionPhase = ExecutionPhase.Initial;
+                    section.RequiresResearch = true;
+                }
+                else if (isConclusion)
+                {
+                    section.ExecutionPhase = ExecutionPhase.Final;
+                    section.RequiresResearch = false;
+                }
+                else
+                {
+                    section.ExecutionPhase = ExecutionPhase.Body;
+                }
+
+                // Create Research Tasks
                 if (section.RequiresResearch)
                 {
                     researchTasks.Add(

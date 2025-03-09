@@ -9,6 +9,7 @@ public class ExecutionPlan
     public int MaxConcurrentSections { get; set; }
     public ExecutionStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
+    public DateTime? StartedAt { get; set; }
     public DateTime? CompletedAt { get; set; }
 }
 
@@ -23,6 +24,10 @@ public class SectionResearchTask
     public string Content { get; set; } = string.Empty;
     public DateTime? StartedAt { get; set; }
     public DateTime? CompletedAt { get; set; }
+    public bool IsRevised { get; set; }
+    public string ErrorMessage { get; set; } = string.Empty;
+    public int TokensUsed { get; set; }
+    public ExecutionPhase? Phase { get; set; }
 }
 
 public class SearchResultSet
@@ -30,6 +35,13 @@ public class SearchResultSet
     public string Query { get; set; } = string.Empty;
     public List<SearchResult> Results { get; set; } = new();
     public DateTime Timestamp { get; set; }
+}
+
+public enum ExecutionPhase
+{
+    Initial,
+    Body,
+    Final,
 }
 
 public enum ExecutionStatus

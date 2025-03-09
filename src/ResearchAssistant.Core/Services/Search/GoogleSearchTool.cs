@@ -304,6 +304,26 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
         _logger.LogInformation("Retrieved {Count} search results", searchResults.Count);
         return searchResults;
     }
+
+    // Add this method to GoogleSearchToolWithFunctionCalling class
+    public Task<List<SearchResult>> SearchAsync(string query, CancellationToken cancellationToken)
+    {
+        // Simply delegate to the existing method with null options
+        return SearchAsync(query, null, cancellationToken);
+    }
+
+    // Add this public method to return the search plugin
+    public KernelPlugin GetSearchPlugin()
+    {
+        // Ensure the plugin is initialized
+        if (_searchPlugin == null)
+        {
+            _searchPlugin = _googleSearch.CreateWithGetTextSearchResults(SEARCH_PLUGIN_NAME);
+            _logger.LogDebug("Search plugin created for external use");
+        }
+
+        return _searchPlugin;
+    }
 }
 
 #pragma warning restore SKEXP0001, SKEXP0050
