@@ -127,8 +127,7 @@ public class GoogleSearchToolWithFunctionCalling : ISearchTool
     {
         // This prompt instructs the LLM to analyze the query and extract the best search terms
         var promptTemplate =
-            @"
-        Analyze this query and determine the best search terms to find relevant information: 
+            @"Analyze this query and determine the best search terms to find relevant information:
 
         Query: {{$query}}
 
