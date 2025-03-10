@@ -28,17 +28,17 @@ The application leverages Microsoft's Semantic Kernel framework to interact with
 The project follows a service-oriented architecture with clear separation of concerns:
 
 ```bash
-┌───────────────────────┐      ┌───────────────────────┐
-│  ResearchAssistant.Cli│      │ResearchAssistant.Core │
-│  (User Interface)     │─────▶│  (Business Logic)     │
-└───────────────────────┘      └───────────────────────┘
-                                          │
-                                          ▼
-                               ┌───────────────────────┐
-                               │   External Services   │
-                               │  - OpenAI             │
-                               │  - Google Search      │
-                               └───────────────────────┘
+    ┌────────────────────────┐                              ┌────────────────────────┐
+    │  ResearchAssistant.Cli │                              │ ResearchAssistant.Core │
+    │  (User Interface)      │─────────────────────────────▶│   (Business Logic)     │
+    └────────────────────────┘                              └────────────────────────┘
+                                                                        │
+                                                                        ▼
+                                                            ┌────────────────────────┐
+                                                            │   External Services    │
+                                                            │  - OpenAI              │
+                                                            │  - Google Search       │
+                                                            └────────────────────────┘
 ```
 
 ### Key Components
@@ -54,9 +54,9 @@ The project follows a service-oriented architecture with clear separation of con
 
 ### Prerequisites
 
-- .NET 9.0 SDK
-- OpenAI API key
-- Google API key and Custom Search Engine ID (for search functionality)
+- `.NET 9.0 SDK`
+- `OpenAI API key`
+- `Google Search API key` and `Custom Search Engine ID` **(for search functionality)**
 
 ### Installation
 
