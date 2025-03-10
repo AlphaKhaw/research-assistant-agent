@@ -21,7 +21,7 @@ test-planner:
 
 
 # Build the research assistant CLI tool
-build-cli:
+build:
 	dotnet build $(CLI_PROJECT) -c $(CONFIGURATION) -o $(OUTPUT_DIR)
 	@echo "Research Assistant CLI built successfully. Execute with 'make run-research' or 'make research"
 
