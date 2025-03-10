@@ -134,3 +134,6 @@ _NCrunch*
 
 # Environment
 .env
+
+# Output
+output/
