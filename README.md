@@ -66,17 +66,17 @@ The project follows a service-oriented architecture with clear separation of con
    cd research-assistant-agent
    ```
 
-2. Build the application:
-   ```
-   make build
-   ```
-
-3. Set up environment variables (or create a .env file):
+2. Set up environment variables (or create a .env file):
    ```
    OPENAI_API_KEY=your_openai_api_key
    OPENAI_MODEL=gpt-4o
    GOOGLE_API_KEY=your_google_api_key
    GOOGLE_SEARCH_ENGINE_ID=your_search_engine_id
+   ```
+
+3. Build the application:
+   ```
+   make build
    ```
 
 ## Usage

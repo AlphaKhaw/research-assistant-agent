@@ -28,7 +28,7 @@ build:
 
 # Clean build artifacts
 clean:
-	dotnet clean
+	dotnet clean $(CLI_PROJECT) -c $(CONFIGURATION)
 	rm -rf $(OUTPUT_DIR)
 
 
